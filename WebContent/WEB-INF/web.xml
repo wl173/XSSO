@@ -7,6 +7,12 @@
   		<param-value>XSSO</param-value>
   	</context-param>
   	
+  	
+  	<!-- 应与 SSOSessionTimeOut 参数保持一致（这里单位：分钟） -->
+  	<session-config>  
+		<session-timeout>60</session-timeout>  
+    </session-config>  
+  	
   
   	<!-- 系统初始化信息 ZhengWei(HY) Add 2017-02-03 -->
 	<listener>

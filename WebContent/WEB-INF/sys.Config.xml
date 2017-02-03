@@ -35,7 +35,7 @@
 	        
 	        <item id="SSOSessionTimeOut">
 	            <name>SSOSessionTimeOut</name>
-				<value>60</value>
+				<value>3600</value>
 				<comment>单点登陆的会话超时时长(单位：秒)</comment>
 	        </item>
 	        
