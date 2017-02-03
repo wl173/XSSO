@@ -17,7 +17,7 @@ import org.hy.xsso.common.Cluster;
 
 
 /**
- * TODO(请详细描述类型的作用。描述后请删除todo标签) 
+ * 单点登陆验证
  *
  * @author      ZhengWei(HY)
  * @createDate  2017-02-03
