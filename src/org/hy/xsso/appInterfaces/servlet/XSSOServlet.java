@@ -45,8 +45,6 @@ public class XSSOServlet extends HttpServlet
     @SuppressWarnings("unchecked")
     public void doGet(HttpServletRequest i_Request, HttpServletResponse i_Response) throws ServletException, IOException 
     {
-        i_Response.setContentType("text/html;charset=UTF-8");
-        
         Return<Object> v_SessionData = (Return<Object>)i_Request.getSession().getAttribute($SessionID);
         
         // 单点登陆：请求各个单点是否有过登录动作，并通过jsonp跨域回调给最终用户当前访问的单点。
