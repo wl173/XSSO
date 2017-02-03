@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hy.common.Help;
+import org.hy.common.app.Param;
 import org.hy.common.net.ClientSocket;
 import org.hy.common.net.ClientSocketCluster;
 import org.hy.common.xml.XJava;
@@ -87,7 +88,7 @@ public class Cluster
      */
     public static long getClusterTimeout()
     {
-        return Long.parseLong(Help.NVL(XJava.getParam("ClusterTimeout").getValue() ,"30000"));
+        return Long.parseLong(Help.NVL(Help.NVL(XJava.getParam("ClusterTimeout") ,new Param()).getValue() ,"30000"));
     }
     
     
@@ -103,7 +104,7 @@ public class Cluster
      */
     public static int getSSOSessionTimeOut()
     {
-        return Integer.parseInt(Help.NVL(XJava.getParam("SSOSessionTimeOut").getValue() ,"3600"));
+        return Integer.parseInt(Help.NVL(Help.NVL(XJava.getParam("SSOSessionTimeOut") ,new Param()).getValue() ,"3600"));
     }
     
     
@@ -119,7 +120,7 @@ public class Cluster
      */
     public static List<ClientSocket> getClusters()
     {
-        String []          v_ClusterServers = Help.NVL(XJava.getParam("AppServers").getValue()).split(",");
+        String []          v_ClusterServers = Help.NVL(Help.NVL(XJava.getParam("AppServers") ,new Param()).getValue()).split(",");
         List<ClientSocket> v_Clusters       = new ArrayList<ClientSocket>();
         
         if ( !Help.isNull(v_ClusterServers) )
