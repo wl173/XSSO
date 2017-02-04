@@ -40,8 +40,8 @@ public class LoginAction
         // 其后执行下面的代码
         
         
-        
-        User         v_LoginUser = (User)getRequest().getSession().getAttribute($SessionID);
+        ISSODAO      v_SSODAO    = (ISSODAO) XJava.getObject("SSODAO");
+        User         v_LoginUser = (User)getSession().getAttribute($SessionID);
         Return<User> v_SSOUser   = null;
         
         if ( v_LoginUser != null )
@@ -50,15 +50,14 @@ public class LoginAction
             if ( v_SSOUser != null )
             {
                 // 保持集群会话活力及有效性
-                ISSODAO v_SSODAO = (ISSODAO) XJava.getObject("SSODAO");
                 v_SSODAO.aliveClusterUser(v_LoginUser.getSessionID() ,v_SSOUser.paramObj);
                 return v_LoginUser;
             }
             else
             {
                 // 单点已退出
-                getRequest().getSession().removeAttribute($SessionID);
-                getRequest().getSession().invalidate();
+                getSession().removeAttribute($SessionID);
+                getSession().invalidate();
                 
                 return null;
             }
@@ -76,8 +75,11 @@ public class LoginAction
                         
                 if ( v_LoginUser != null )
                 {
-                    System.out.println(Date.getNowTime().getFullMilli() + "  跨域单点登陆：" + v_LoginUser.getLoginAccount() + v_LoginUser.getUserName());
-                    getRequest().getSession().setSessionAttribute($SessionID ,v_LoginUser);
+                    System.out.println(Date.getNowTime().getFullMilli() + "  跨域单点登陆：" + v_LoginUser.getUserName());
+                    getSession().setSessionAttribute($SessionID ,v_LoginUser);
+                    
+                    // 保持集群会话活力及有效性
+                    v_SSODAO.aliveClusterUser(v_LoginUser.getSessionID() ,v_SSOUser.paramObj);
                     return v_LoginUser;
                 }
             }
@@ -103,8 +105,8 @@ public class LoginAction
         // 验证成功后，执行下面的代码
 
         
-        i_User.setSessionID(ISSODAO.$USID + getRequest().getSession().getId());
-        getRequest().getSession().setSessionAttribute($SessionID, i_User);
+        i_User.setSessionID(ISSODAO.$USID + getSession().getId());
+        getSession().setSessionAttribute($SessionID, i_User);
         
         // 单点登陆
         ISSODAO  v_SSODAO = (ISSODAO) XJava.getObject("SSODAO");
@@ -131,11 +133,11 @@ public class LoginAction
         
         
         
-        User v_LoginUser = (User)getRequest().getSession().getSessionAttribute($SessionID);
+        User v_LoginUser = (User)getSession().getSessionAttribute($SessionID);
         if ( v_LoginUser != null )
         {
-            getRequest().getSession().removeAttribute($SessionID);
-            getRequest().getSession().invalidate();
+            getSession().removeAttribute($SessionID);
+            getSession().invalidate();
                             
             // 单点退出
             ISSODAO v_SSODAO = (ISSODAO) XJava.getObject("SSODAO");
