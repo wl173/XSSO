@@ -9,9 +9,14 @@
 	
 	<!-- 系统服务配置信息 -->
 	<xconfig>
-		
+	
 		<server id="Server">
 			<port>1821</port>
+			
+			<call name="addListener">
+				<listener class="org.hy.xsso.net.LogoutListener" />
+			</call>
+			
 			<call name="open" />
 		</server>
 		
