@@ -5,7 +5,7 @@ import org.hy.common.Help;
 import org.hy.common.Return;
 
 import xx.xx.xx.User;
-import xx.xx.xx.SSDAO;
+import xx.xx.xx.SSODAO;
 
 
 
