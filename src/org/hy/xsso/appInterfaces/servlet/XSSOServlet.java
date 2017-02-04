@@ -60,6 +60,12 @@ public class XSSOServlet extends HttpServlet
                 {
                     i_Response.getWriter().println(v_SSOCallBack + "('" + v_SessionData.paramStr + "');");
                 }
+                else
+                {
+                    // 单点已退出 或 会话已超时过期
+                    i_Request.getSession().removeAttribute($SessionID);
+                    i_Request.getSession().invalidate();
+                }
             }
             
             return;
@@ -68,25 +74,7 @@ public class XSSOServlet extends HttpServlet
         // 验证登录
         if ( null == v_SessionData )
         {
-            // 单点登陆
-            if ( !Help.isNull(v_USID) )
-            {
-                v_SessionData = (Return<Object>)XJava.getObject(v_USID);
-                
-                if ( v_SessionData == null )
-                {
-                    // 单点已退出 或 会话已超时过期
-                    return;
-                }
-                else
-                {
-                    // 跨域单点登陆成功
-                    i_Request.getSession().setMaxInactiveInterval(Cluster.getSSOSessionTimeOut());
-                    i_Request.getSession().setAttribute($SessionID ,v_SessionData);
-                    
-                    Cluster.loginCluster(v_SessionData.paramStr ,v_SessionData);
-                }
-            }
+            this.createSessionByUSID(i_Request ,v_USID);
         }
         else
         {
@@ -96,12 +84,50 @@ public class XSSOServlet extends HttpServlet
             {
                 // 单点已退出 或 会话已超时过期
                 i_Request.getSession().removeAttribute($SessionID);
-                return;
+                i_Request.getSession().invalidate();
+                
+                // 如果票据USID是有效的，有可能是退出后，重新登陆的
+                this.createSessionByUSID(i_Request ,v_USID);
             }
             else
             {
                 // 保持集群会话活力及有效性
                 Cluster.aliveCluster(v_SessionData.paramStr ,v_SessionData ,Cluster.getSSOSessionTimeOut());
+            }
+        }
+    }
+    
+    
+    
+    /**
+     * 按票据USID创建单点会话
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2017-02-04
+     * @version     v1.0
+     *
+     * @param i_Request
+     * @param i_USID
+     */
+    @SuppressWarnings("unchecked")
+    private void createSessionByUSID(HttpServletRequest i_Request ,String i_USID)
+    {
+        if ( !Help.isNull(i_USID) )
+        {
+            Return<Object> v_SessionData = (Return<Object>)XJava.getObject(i_USID);
+            
+            if ( v_SessionData == null )
+            {
+                // 单点已退出 或 会话已超时过期
+                return;
+            }
+            else
+            {
+                // 跨域单点登陆成功
+                i_Request.getSession().setMaxInactiveInterval(Cluster.getSSOSessionTimeOut());
+                i_Request.getSession().setAttribute($SessionID ,v_SessionData);
+                
+                Cluster.loginCluster(v_SessionData.paramStr ,v_SessionData);
             }
         }
     }
