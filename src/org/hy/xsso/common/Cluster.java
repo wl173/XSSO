@@ -78,6 +78,33 @@ public class Cluster
     
     
     /**
+     * 持会话活力及有效性
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2017-02-04
+     * @version     v1.0
+     *
+     * @param i_SessionID          会话ID
+     * @param i_SessionData        会话数据（一般为登陆的用户信息）
+     * @param i_DataExpireTimeLen  数据的过期时长(单位：秒)。小于等于0或为空，表示永远有效
+     */
+    public static void aliveCluster(String i_SessionID ,Object i_SessionData ,long i_DataExpireTimeLen)
+    {
+        List<ClientSocket> v_Servers = getClusters();
+        
+        if ( !Help.isNull(v_Servers) )
+        {
+            ClientSocketCluster.sendObjects(v_Servers 
+                                           ,getClusterTimeout() 
+                                           ,i_SessionID
+                                           ,i_SessionData 
+                                           ,i_DataExpireTimeLen);
+        }
+    }
+    
+    
+    
+    /**
      * 集群并发通讯的超时时长。默认为：30000毫秒
      * 
      * @author      ZhengWei(HY)
