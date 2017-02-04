@@ -84,7 +84,6 @@ public class XSSOServlet extends HttpServlet
                     i_Request.getSession().setMaxInactiveInterval(Cluster.getSSOSessionTimeOut());
                     i_Request.getSession().setAttribute($SessionID ,v_SessionData);
                     
-                    // 保持集群会话活力及有效性
                     Cluster.loginCluster(v_SessionData.paramStr ,v_SessionData);
                 }
             }
@@ -102,7 +101,7 @@ public class XSSOServlet extends HttpServlet
             else
             {
                 // 保持集群会话活力及有效性
-                Cluster.loginCluster(v_SessionData.paramStr ,v_SessionData);
+                Cluster.aliveCluster(v_SessionData.paramStr ,v_SessionData ,Cluster.getSSOSessionTimeOut());
             }
         }
     }

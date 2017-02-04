@@ -14,6 +14,10 @@
 			<port>1821</port>
 			
 			<call name="addListener">
+				<listener class="org.hy.xsso.net.AliveListener" />
+			</call>
+			
+			<call name="addListener">
 				<listener class="org.hy.xsso.net.LogoutListener" />
 			</call>
 			
