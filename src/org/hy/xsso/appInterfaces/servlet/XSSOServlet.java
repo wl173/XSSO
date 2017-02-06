@@ -11,6 +11,7 @@ import org.hy.common.Help;
 import org.hy.common.Return;
 import org.hy.common.xml.XJava;
 import org.hy.xsso.common.Cluster;
+import org.hy.xsso.common.Log;
 
 
 
@@ -50,21 +51,25 @@ public class XSSOServlet extends HttpServlet
         // 单点登陆：请求各个单点是否有过登录动作，并通过jsonp跨域回调给最终用户当前访问的单点。
         String v_SSOCallBack = i_Request.getParameter("SSOCallBack");
         String v_USID        = i_Request.getParameter("USID");
+        String v_SessionUSID = "";
         
         if ( !Help.isNull(v_SSOCallBack) )
         {
             if ( null != v_SessionData )
             {
-                v_SessionData = (Return<Object>)XJava.getObject(v_SessionData.paramStr);
+                v_SessionUSID = v_SessionData.paramStr;
+                v_SessionData = (Return<Object>)XJava.getObject(v_SessionUSID);
                 if ( v_SessionData != null )
                 {
-                    i_Response.getWriter().println(v_SSOCallBack + "('" + v_SessionData.paramStr + "');");
+                    i_Response.getWriter().println(v_SSOCallBack + "('" + v_SessionUSID + "');");
+                    Log.log("全局会话存在，返回票据 :USID。" ,v_SessionUSID);
                 }
                 else
                 {
                     // 单点已退出 或 会话已超时过期
                     i_Request.getSession().removeAttribute($SessionID);
                     i_Request.getSession().invalidate();
+                    Log.log("票据 :USID 已失效，全局会话被销毁。" ,v_SessionUSID);
                 }
             }
             
@@ -74,25 +79,44 @@ public class XSSOServlet extends HttpServlet
         // 验证登录
         if ( null == v_SessionData )
         {
-            this.createSessionByUSID(i_Request ,v_USID);
+            if ( Help.isNull(v_USID) )
+            {
+                // Nothing.
+            }
+            else if ( this.createSessionByUSID(i_Request ,v_USID) )
+            {
+                Log.log("使用票据 :USID 创建全局会话。" ,v_USID);
+            }
+            else
+            {
+                Log.log("票据 :USID 已失效 或 已过期 或 为非法票据。" ,v_USID);
+            }
         }
         else
         {
-            v_SessionData = (Return<Object>)XJava.getObject(v_SessionData.paramStr);
+            v_SessionUSID = v_SessionData.paramStr;
+            v_SessionData = (Return<Object>)XJava.getObject(v_SessionUSID);
             
             if ( v_SessionData == null )
             {
-                // 单点已退出 或 会话已超时过期
-                i_Request.getSession().removeAttribute($SessionID);
-                i_Request.getSession().invalidate();
-                
-                // 如果票据USID是有效的，有可能是退出后，重新登陆的
-                this.createSessionByUSID(i_Request ,v_USID);
+                if ( !Help.isNull(v_USID) && this.createSessionByUSID(i_Request ,v_USID) )
+                {
+                    // 如果票据USID是有效的，有可能是退出后，又重新登陆的
+                    Log.log("使用票据 :USID 创建全局会话。旧票据 " + v_SessionUSID + " 已销毁。" ,v_USID);
+                }
+                else
+                {
+                    // 单点已退出 或 会话已超时过期
+                    i_Request.getSession().removeAttribute($SessionID);
+                    i_Request.getSession().invalidate();
+                    Log.log("票据 :USID 已失效 或 已过期。" ,v_SessionUSID);
+                }
             }
             else
             {
                 // 保持集群会话活力及有效性
-                Cluster.aliveCluster(v_SessionData.paramStr ,v_SessionData ,Cluster.getSSOSessionTimeOut());
+                Cluster.aliveCluster(v_SessionUSID ,v_SessionData ,Cluster.getSSOSessionTimeOut());
+                Log.log("保持集群会话活力。票据 :USID。" ,v_SessionUSID);
             }
         }
     }
@@ -108,27 +132,28 @@ public class XSSOServlet extends HttpServlet
      *
      * @param i_Request
      * @param i_USID
+     * 
+     * @return  创建成功返回 true
      */
     @SuppressWarnings("unchecked")
-    private void createSessionByUSID(HttpServletRequest i_Request ,String i_USID)
+    private boolean createSessionByUSID(HttpServletRequest i_Request ,String i_USID)
     {
-        if ( !Help.isNull(i_USID) )
+        Return<Object> v_SessionData = (Return<Object>)XJava.getObject(i_USID);
+        
+        if ( v_SessionData == null )
         {
-            Return<Object> v_SessionData = (Return<Object>)XJava.getObject(i_USID);
+            // 单点已退出 或 会话已超时过期
+            return false;
+        }
+        else
+        {
+            // 跨域单点登陆成功
+            i_Request.getSession().setMaxInactiveInterval(Cluster.getSSOSessionTimeOut());
+            i_Request.getSession().setAttribute($SessionID ,v_SessionData);
             
-            if ( v_SessionData == null )
-            {
-                // 单点已退出 或 会话已超时过期
-                return;
-            }
-            else
-            {
-                // 跨域单点登陆成功
-                i_Request.getSession().setMaxInactiveInterval(Cluster.getSSOSessionTimeOut());
-                i_Request.getSession().setAttribute($SessionID ,v_SessionData);
-                
-                Cluster.loginCluster(v_SessionData.paramStr ,v_SessionData);
-            }
+            Cluster.loginCluster(v_SessionData.paramStr ,v_SessionData);
+            
+            return true;
         }
     }
     

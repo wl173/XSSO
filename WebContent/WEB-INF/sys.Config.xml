@@ -39,6 +39,12 @@
 				<comment>单点登陆的会话超时时长(单位：秒)</comment>
 	        </item>
 	        
+	        <item id="IsShowLog">
+	            <name>IsShowLog</name>
+				<value>true</value>
+				<comment>是否显示日志信息</comment>
+	        </item>
+	        
 	        <item id="RootPackageName">
 	            <name>RootPackageName</name>
 				<value>org.hy.xsso</value>
