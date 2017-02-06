@@ -103,8 +103,10 @@ public class LoginAction
         // ...
         // ...
         // 验证成功后，执行下面的代码
-
         
+        
+        
+        // 生成票据
         i_User.setSessionID(ISSODAO.$USID + getSession().getId());
         getSession().setSessionAttribute($SessionID, i_User);
         
