@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.hy.common.Help;
 import org.hy.common.Return;
+import org.hy.common.StringHelp;
 import org.hy.common.net.ClientSocket;
 import org.hy.common.net.ClientSocketCluster;
 import org.hy.common.net.data.CommunicationRequest;
@@ -194,7 +195,7 @@ public class SSODAO
      */
     private List<ClientSocket> getSSOServers()
     {
-        String []          v_ClusterServers = XJava.getParam("SSOServers").getValue().split(",");
+        String []          v_ClusterServers = StringHelp.replaceAll(XJava.getParam("SSOServers").getValue() ,new String[]{" " ,"\t" ,"\r" ,"\n"} ,new String[]{""}).split(",");
         List<ClientSocket> v_Clusters       = new ArrayList<ClientSocket>();
         
         for (String v_Server : v_ClusterServers)

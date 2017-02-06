@@ -157,7 +157,7 @@ public class Cluster
             {
                 if ( !Help.isNull(v_Server) )
                 {
-                    String [] v_HostPort = (StringHelp.replaceAll(v_Server.trim() ,new String[]{"\t" ,"\n" ,"\r"} ,new String[]{""}) + ":1721").split(":");
+                    String [] v_HostPort = (StringHelp.replaceAll(v_Server.trim() ,new String[]{" " ,"\t" ,"\r" ,"\n"} ,new String[]{""}) + ":1721").split(":");
                     
                     v_Clusters.add(new ClientSocket(v_HostPort[0] ,Integer.parseInt(v_HostPort[1])));
                 }

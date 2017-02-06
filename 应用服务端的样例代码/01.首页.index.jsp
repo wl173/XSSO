@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page import="org.hy.common.Help" %>
+<%@ page import="org.hy.common.StringHelp" %>
 <%@ page import="org.hy.common.xml.XJava" %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -41,7 +42,7 @@
   
   <body>
     <%
-    String [] v_ClusterServers = XJava.getParam("SSOServersHttp").getValue().split(",");
+    String [] v_ClusterServers = StringHelp.replaceAll(XJava.getParam("SSOServersHttp").getValue() ,new String[]{" " ,"\t" ,"\r" ,"\n"} ,new String[]{""}).split(",");
     for (String v_Server : v_ClusterServers)
     {
         String [] v_HostPort = v_Server.split(":");
