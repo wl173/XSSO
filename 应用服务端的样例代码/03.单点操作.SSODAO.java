@@ -182,6 +182,8 @@ public class SSODAO
             }
         }
         
+        int v_Count = 0;
+        
         if ( !Help.isNull(v_Datas) )
         {
             for (CommunicationResponse v_Data : v_Datas)
@@ -189,11 +191,12 @@ public class SSODAO
                 if ( v_Data.getDataExpireTimeLen() > 0 )
                 {
                     XJava.putObject(v_Data.getDataXID() ,v_Data.getData() ,v_Data.getDataExpireTimeLen());
+                    v_Count++;
                 }
             }
-            
-            System.out.println("-- 同步单点登陆服务的会话数据... ...完成.");
         }
+        
+        System.out.println("-- 同步单点登陆服务的会话数据... ...完成. 共同步 " + v_Count + " 份。");
     }
     
     

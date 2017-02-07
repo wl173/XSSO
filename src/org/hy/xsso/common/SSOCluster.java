@@ -45,7 +45,7 @@ public class SSOCluster extends Cluster
         CommunicationResponse       v_ResponseData = null;
         List<CommunicationResponse> v_Datas        = null;
         
-        System.out.println("-- 同步其它单点登陆服务的会话数据... ...");
+        System.out.println("-- 同步集群单点登陆服务的会话数据... ...");
         
         for (ClientSocket v_Server : v_Servers)
         {
@@ -59,9 +59,10 @@ public class SSOCluster extends Cluster
             }
         }
         
+        int v_Count = 0;
+        
         if ( !Help.isNull(v_Datas) )
         {
-            int v_Count = 0;
             for (CommunicationResponse v_Data : v_Datas)
             {
                 if ( v_Data.getDataExpireTimeLen() > 0 )
@@ -70,13 +71,9 @@ public class SSOCluster extends Cluster
                     v_Count++;
                 }
             }
-            
-            System.out.println("-- 同步其它单点登陆服务的会话数据... ...完成. 共同步 " + v_Count + " 份。");
         }
-        else
-        {
-            System.out.println("-- 同步其它单点登陆服务的会话数据... ...完成.");
-        }
+        
+        System.out.println("-- 同步集群单点登陆服务的会话数据... ...完成. 共同步 " + v_Count + " 份。");
     }
     
     
