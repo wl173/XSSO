@@ -21,7 +21,7 @@ import org.hy.common.xml.XJava;
  * @createDate  2017-01-25
  * @version     v1.0
  */
-public class AppCluster
+public class AppCluster extends Cluster
 {
     
     private AppCluster()
@@ -43,7 +43,7 @@ public class AppCluster
      */
     public static void loginCluster(String i_SessionID ,Object i_SessionData)
     {
-        List<ClientSocket> v_Servers = getClusters();
+        List<ClientSocket> v_Servers = getAppServers();
         
         if ( !Help.isNull(v_Servers) )
         {
@@ -68,7 +68,7 @@ public class AppCluster
      */
     public static void logoutCluster(String i_SessionID)
     {
-        List<ClientSocket> v_Servers = getClusters();
+        List<ClientSocket> v_Servers = getAppServers();
         
         if ( !Help.isNull(v_Servers) )
         {
@@ -91,7 +91,7 @@ public class AppCluster
      */
     public static void aliveCluster(String i_SessionID ,Object i_SessionData ,long i_DataExpireTimeLen)
     {
-        List<ClientSocket> v_Servers = getClusters();
+        List<ClientSocket> v_Servers = getAppServers();
         
         if ( !Help.isNull(v_Servers) )
         {
@@ -106,38 +106,6 @@ public class AppCluster
     
     
     /**
-     * 集群并发通讯的超时时长。默认为：30000毫秒
-     * 
-     * @author      ZhengWei(HY)
-     * @createDate  2017-01-25
-     * @version     v1.0
-     *
-     * @return
-     */
-    public static long getClusterTimeout()
-    {
-        return Long.parseLong(Help.NVL(Help.NVL(XJava.getParam("ClusterTimeout") ,new Param()).getValue() ,"30000"));
-    }
-    
-    
-    
-    /**
-     * 单点登陆的会话超时时长。默认为：3600秒
-     * 
-     * @author      ZhengWei(HY)
-     * @createDate  2017-01-23
-     * @version     v1.0
-     *
-     * @return
-     */
-    public static int getSSOSessionTimeOut()
-    {
-        return Integer.parseInt(Help.NVL(Help.NVL(XJava.getParam("SSOSessionTimeOut") ,new Param()).getValue() ,"3600"));
-    }
-    
-    
-    
-    /**
      * 获取集群配置信息
      * 
      * @author      ZhengWei(HY)
@@ -146,7 +114,7 @@ public class AppCluster
      *
      * @return
      */
-    public static List<ClientSocket> getClusters()
+    public static List<ClientSocket> getAppServers()
     {
         String []          v_ClusterServers = Help.NVL(Help.NVL(XJava.getParam("AppServers") ,new Param()).getValue()).split(",");
         List<ClientSocket> v_Clusters       = new ArrayList<ClientSocket>();

@@ -19,6 +19,22 @@
 				<comment>部署Web服务所在主机的标示(建议只包含：数字和英文)</comment>
 	        </item>
 	        
+	        <item id="WhoAmI">
+	            <name>WhoAmI</name>
+				<value>
+				    127.0.0.1
+				</value>
+				<comment>在集群服务中标识出自己。请不要填写端口</comment>
+	        </item>
+	        
+	        <item id="ClusterServers">
+	            <name>ClusterServers</name>
+				<value>
+				    127.0.0.1:1821
+				</value>
+				<comment>全部单点登陆验证的集群服务器列表(用逗号分隔)</comment>
+	        </item>
+	        
 	        <item id="AppServers">
 	            <name>AppServers</name>
 				<value>
