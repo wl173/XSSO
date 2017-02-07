@@ -60,7 +60,7 @@ public class LogoutListener implements CommunicationListener
             return v_ResponseData;
         }
         
-        Log.log("用户退出，票据 :USID 失效。" ,i_RequestData.getDataXID());
+        Log.log(":USID 用户退出，票据失效。" ,i_RequestData.getDataXID());
         
         v_ResponseData.setDataXID(i_RequestData.getDataXID());
         XJava.remove(i_RequestData.getDataXID());
