@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.hy.common.Help;
-import org.hy.common.Return;
 import org.hy.common.StringHelp;
 import org.hy.common.net.ClientSocket;
 import org.hy.common.net.ClientSocketCluster;
+import org.hy.common.net.data.Communication;
 import org.hy.common.net.data.CommunicationRequest;
 import org.hy.common.net.data.CommunicationResponse;
 import org.hy.common.xml.XJava;
@@ -59,10 +59,11 @@ public class SSODAO
             v_USID = $USID + i_SessionID;
         }
         
-        v_RequestData.paramObj(i_User);
-        v_RequestData.paramStr(v_USID);
+        v_SessionData.setDataXID(          v_USID);
+        v_SessionData.setData(             v_Clone);
+        v_SessionData.setDataExpireTimeLen(this.getSSOSessionTimeOut());
         
-        XJava.putObject(v_USID ,v_RequestData ,this.getSSOSessionTimeOut());
+        XJava.putObject(v_SessionData.getDataXID() ,v_SessionData ,v_SessionData.getDataExpireTimeLen());
         
         if ( !Help.isNull(v_Servers) )
         {
@@ -129,10 +130,6 @@ public class SSODAO
         CommunicationRequest v_RequestData = new CommunicationRequest();
         String               v_USID        = "";
         
-        v_RequestData.setEventType("alive");
-        v_RequestData.setData(i_User);
-        v_RequestData.setDataExpireTimeLen(this.getSSOSessionTimeOut());
-        
         if ( i_SessionID.startsWith($USID) )
         {
             v_USID = i_SessionID;
@@ -142,8 +139,16 @@ public class SSODAO
             v_USID = $USID + i_SessionID;
         }
         
-        v_RequestData.setDataXID(v_USID);
-        XJava.putObject(         v_USID ,(new Return<Object>()).paramObj(i_User).paramStr(v_USID) ,this.getSSOSessionTimeOut());
+        v_SessionData.setDataXID(          v_USID);
+        v_SessionData.setData(             i_User);
+        v_SessionData.setDataExpireTimeLen(this.getSSOSessionTimeOut());
+        
+        v_RequestData.setEventType(        "alive");
+        v_RequestData.setDataXID(          v_SessionData.getDataXID());
+        v_RequestData.setData(             v_SessionData);
+        v_RequestData.setDataExpireTimeLen(v_SessionData.getDataExpireTimeLen());
+        
+        XJava.putObject(v_SessionData.getDataXID() ,v_SessionData ,v_SessionData.getDataExpireTimeLen());
         
         if ( !Help.isNull(v_Servers) )
         {

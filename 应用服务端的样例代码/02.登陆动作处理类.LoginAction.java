@@ -2,7 +2,7 @@ package xx.xx.xx;
 
 import org.hy.common.Date;
 import org.hy.common.Help;
-import org.hy.common.Return;
+import org.hy.common.net.data.Communication;
 
 import xx.xx.xx.User;
 import xx.xx.xx.SSODAO;
@@ -40,17 +40,17 @@ public class LoginAction
         // 其后执行下面的代码
         
         
-        ISSODAO      v_SSODAO    = (ISSODAO) XJava.getObject("SSODAO");
-        User         v_LoginUser = (User)getSession().getAttribute($SessionID);
-        Return<User> v_SSOUser   = null;
+        ISSODAO       v_SSODAO      = (ISSODAO) XJava.getObject("SSODAO");
+        User          v_LoginUser   = (User)getSession().getAttribute($SessionID);
+        Communication v_SessionData = null;
         
         if ( v_LoginUser != null )
         {   
-            v_SSOUser = (Return<User>)XJava.getObject(v_LoginUser.getSessionID());
-            if ( v_SSOUser != null )
+            v_SessionData = (Communication)XJava.getObject(v_LoginUser.getSessionID());
+            if ( v_SessionData != null )
             {
                 // 保持集群会话活力及有效性
-                v_SSODAO.aliveClusterUser(v_LoginUser.getSessionID() ,v_SSOUser.paramObj);
+                v_SSODAO.aliveClusterUser(v_LoginUser.getSessionID() ,(User)v_SessionData.getData());
                 return v_LoginUser;
             }
             else
@@ -67,11 +67,11 @@ public class LoginAction
         // 跨域单点登陆
         if ( !Help.isNull(i_USID) )
         {
-            v_SSOUser = (Return<User>)XJava.getObject(i_USID);
+            v_SessionData = (Communication)XJava.getObject(i_USID);
             
-            if ( v_SSOUser != null )
+            if ( v_SessionData != null )
             {
-                v_LoginUser = v_SSOUser.paramObj;
+                v_LoginUser = (User)v_SessionData.getData();
                         
                 if ( v_LoginUser != null )
                 {
@@ -79,7 +79,7 @@ public class LoginAction
                     getSession().setSessionAttribute($SessionID ,v_LoginUser);
                     
                     // 保持集群会话活力及有效性
-                    v_SSODAO.aliveClusterUser(v_LoginUser.getSessionID() ,v_SSOUser.paramObj);
+                    v_SSODAO.aliveClusterUser(v_SessionData.getDataXID() ,v_SessionData.getData());
                     return v_LoginUser;
                 }
             }
