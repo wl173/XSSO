@@ -30,6 +30,6 @@ XSSO
 
 6. 监控页面(默认密码xsso)
 
-➢ 在线用户数量 http://127.0.0.1:8080/XSSO/analyses/analyseObject?xid=USID*
+➢ 在线会话数量 http://127.0.0.1:8080/XSSO/analyses/analyseObject?xid=USID*
 
-➢ 在线用户的具体信息 http://127.0.0.1:8080/XSSO/analyses/analyseObject?xid=完整的票据号
+➢ 在线会话的具体信息 http://127.0.0.1:8080/XSSO/analyses/analyseObject?xid=完整的票据号
