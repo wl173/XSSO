@@ -66,6 +66,8 @@ public final class InitConfig extends AppInitConfig
             
             
             init_TPool();
+            
+            SSOCluster.syncSSOSessions();
         }
     }
     

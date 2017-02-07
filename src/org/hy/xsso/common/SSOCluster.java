@@ -39,7 +39,7 @@ public class SSOCluster extends Cluster
      *
      */
     @SuppressWarnings("unchecked")
-    public void syncSSOSessions()
+    public static void syncSSOSessions()
     {
         List<ClientSocket>          v_Servers      = getSSOServersNoMy();
         CommunicationResponse       v_ResponseData = null;
