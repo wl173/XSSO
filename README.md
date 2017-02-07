@@ -33,3 +33,9 @@ XSSO
 ➢ 在线会话数量 http://127.0.0.1:8080/XSSO/analyses/analyseObject?xid=USID*
 
 ➢ 在线会话的具体信息 http://127.0.0.1:8080/XSSO/analyses/analyseObject?xid=完整的票据号
+
+➢ 配置文件重新加载页面(支持集群) http://127.0.0.1:8080/XSSO/analyses/analyseObject
+
+➢ 查看集群服务及状态列表 http://127.0.0.1:8080/XSSO/analyses/analyseObject?cluster=Y
+
+➢ 查看配置参数页面 http://127.0.0.1:8080/XSSO/analyses/analyseObject?xid=SYSParam
