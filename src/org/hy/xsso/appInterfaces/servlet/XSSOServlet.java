@@ -62,14 +62,14 @@ public class XSSOServlet extends HttpServlet
                 if ( v_SessionData != null )
                 {
                     i_Response.getWriter().println(v_SSOCallBack + "('" + v_SessionUSID + "');");
-                    Log.log("全局会话存在，返回票据 :USID。" ,v_SessionUSID);
+                    Log.log("全局会话有效，返回票据 :USID。" ,v_SessionUSID);
                 }
                 else
                 {
                     // 单点已退出 或 会话已超时过期
                     i_Request.getSession().removeAttribute($SessionID);
                     i_Request.getSession().invalidate();
-                    Log.log("票据 :USID 已失效，全局会话被销毁。" ,v_SessionUSID);
+                    Log.log("票据 :USID 已失效，全局会话将销毁。" ,v_SessionUSID);
                 }
             }
             
