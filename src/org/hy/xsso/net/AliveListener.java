@@ -5,7 +5,7 @@ import org.hy.common.net.CommunicationListener;
 import org.hy.common.net.data.CommunicationRequest;
 import org.hy.common.net.data.CommunicationResponse;
 import org.hy.common.xml.XJava;
-import org.hy.xsso.common.Cluster;
+import org.hy.xsso.common.AppCluster;
 import org.hy.xsso.common.Log;
 
 
@@ -60,10 +60,11 @@ public class AliveListener implements CommunicationListener
             return v_ResponseData;
         }
         
+        Log.log("保持集群会话活力。票据 :USID  L。" ,i_RequestData.getDataXID());
+        
         v_ResponseData.setDataXID(i_RequestData.getDataXID());
         XJava.putObject(i_RequestData.getDataXID() ,i_RequestData.getData() ,i_RequestData.getDataExpireTimeLen());
-        Cluster.aliveCluster(i_RequestData.getDataXID() ,i_RequestData.getData() ,i_RequestData.getDataExpireTimeLen());
-        Log.log("保持集群会话活力。票据 :USID。" ,i_RequestData.getDataXID());
+        AppCluster.aliveCluster(i_RequestData.getDataXID() ,i_RequestData.getData() ,i_RequestData.getDataExpireTimeLen());
         
         return v_ResponseData;
     }

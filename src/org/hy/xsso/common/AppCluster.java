@@ -15,16 +15,16 @@ import org.hy.common.xml.XJava;
 
 
 /**
- * 集群操作。如，单点登陆
+ * 应用服务的集群操作
  *
  * @author      ZhengWei(HY)
  * @createDate  2017-01-25
  * @version     v1.0
  */
-public class Cluster
+public class AppCluster
 {
     
-    private Cluster()
+    private AppCluster()
     {
         
     }

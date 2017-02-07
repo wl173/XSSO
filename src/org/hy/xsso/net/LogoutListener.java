@@ -5,7 +5,7 @@ import org.hy.common.net.CommunicationListener;
 import org.hy.common.net.data.CommunicationRequest;
 import org.hy.common.net.data.CommunicationResponse;
 import org.hy.common.xml.XJava;
-import org.hy.xsso.common.Cluster;
+import org.hy.xsso.common.AppCluster;
 import org.hy.xsso.common.Log;
 
 
@@ -60,10 +60,11 @@ public class LogoutListener implements CommunicationListener
             return v_ResponseData;
         }
         
+        Log.log("用户退出，票据 :USID 失效。" ,i_RequestData.getDataXID());
+        
         v_ResponseData.setDataXID(i_RequestData.getDataXID());
         XJava.remove(i_RequestData.getDataXID());
-        Cluster.logoutCluster(i_RequestData.getDataXID());
-        Log.log("用户退出，票据 :USID 失效。" ,i_RequestData.getDataXID());
+        AppCluster.logoutCluster(i_RequestData.getDataXID());
         
         return v_ResponseData;
     }

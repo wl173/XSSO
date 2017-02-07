@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hy.common.Help;
 import org.hy.common.Return;
 import org.hy.common.xml.XJava;
-import org.hy.xsso.common.Cluster;
+import org.hy.xsso.common.AppCluster;
 import org.hy.xsso.common.Log;
 
 
@@ -29,10 +29,7 @@ public class XSSOServlet extends HttpServlet
     private static final long   serialVersionUID = 2336614778115702389L;
 
     /** 登陆的Session会话ID标识，标识着是否登陆成功 */
-    public  static final String $SessionID       = "$XSSO$";
-    
-    /** 单点登陆的统计用户会话ID */
-    public  static final String $USID            = "USID";
+    public  static final String $SessionID = "$XSSO$";
     
     
     
@@ -115,8 +112,8 @@ public class XSSOServlet extends HttpServlet
             else
             {
                 // 保持集群会话活力及有效性
-                Cluster.aliveCluster(v_SessionUSID ,v_SessionData ,Cluster.getSSOSessionTimeOut());
-                Log.log("保持集群会话活力。票据 :USID。" ,v_SessionUSID);
+                AppCluster.aliveCluster(v_SessionUSID ,v_SessionData ,AppCluster.getSSOSessionTimeOut());
+                Log.log("保持集群会话活力。票据 :USID  A。" ,v_SessionUSID);
             }
         }
     }
@@ -148,10 +145,10 @@ public class XSSOServlet extends HttpServlet
         else
         {
             // 跨域单点登陆成功
-            i_Request.getSession().setMaxInactiveInterval(Cluster.getSSOSessionTimeOut());
+            i_Request.getSession().setMaxInactiveInterval(AppCluster.getSSOSessionTimeOut());
             i_Request.getSession().setAttribute($SessionID ,v_SessionData);
             
-            Cluster.loginCluster(v_SessionData.paramStr ,v_SessionData);
+            AppCluster.loginCluster(v_SessionData.paramStr ,v_SessionData);
             
             return true;
         }

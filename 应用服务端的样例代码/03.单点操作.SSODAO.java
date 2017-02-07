@@ -11,6 +11,7 @@ import org.hy.common.StringHelp;
 import org.hy.common.net.ClientSocket;
 import org.hy.common.net.ClientSocketCluster;
 import org.hy.common.net.data.CommunicationRequest;
+import org.hy.common.net.data.CommunicationResponse;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.annotation.Xjava;
 
@@ -147,6 +148,51 @@ public class SSODAO
         if ( !Help.isNull(v_Servers) )
         {
             ClientSocketCluster.sends(v_Servers ,this.getClusterTimeout() ,v_RequestData ,false);
+        }
+    }
+    
+    
+    
+    /**
+     * 当应用服务故障后重启时，同步单点登陆服务器的会话数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2017-02-07
+     * @version     v1.0
+     *
+     */
+    @SuppressWarnings("unchecked")
+    public void syncSSOSessions()
+    {
+        List<ClientSocket>          v_Servers      = this.getSSOServers();
+        CommunicationResponse       v_ResponseData = null;
+        List<CommunicationResponse> v_Datas        = null;
+        
+        System.out.println("-- 同步单点登陆服务的会话数据... ...");
+        
+        for (ClientSocket v_Server : v_Servers)
+        {
+            v_ResponseData = v_Server.getObjects($USID);
+            
+            if ( v_ResponseData != null && v_ResponseData.getResult() == 0 )
+            {
+                v_Datas = (List<CommunicationResponse>)v_ResponseData.getData();
+                
+                if ( !Help.isNull(v_Datas) ) {break;}
+            }
+        }
+        
+        if ( !Help.isNull(v_Datas) )
+        {
+            for (CommunicationResponse v_Data : v_Datas)
+            {
+                if ( v_Data.getDataExpireTimeLen() > 0 )
+                {
+                    XJava.putObject(v_Data.getDataXID() ,v_Data.getData() ,v_Data.getDataExpireTimeLen());
+                }
+            }
+            
+            System.out.println("-- 同步单点登陆服务的会话数据... ...完成.");
         }
     }
     
