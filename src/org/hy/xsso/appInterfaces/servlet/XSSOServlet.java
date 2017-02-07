@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hy.common.Help;
-import org.hy.common.net.data.CommunicationRequest;
+import org.hy.common.net.data.Communication;
 import org.hy.common.xml.XJava;
 import org.hy.xsso.common.AppCluster;
 import org.hy.xsso.common.Log;
@@ -42,7 +42,7 @@ public class XSSOServlet extends HttpServlet
     
     public void doGet(HttpServletRequest i_Request, HttpServletResponse i_Response) throws ServletException, IOException 
     {
-        CommunicationRequest v_SessionData = (CommunicationRequest)i_Request.getSession().getAttribute($SessionID);
+        Communication v_SessionData = (Communication)i_Request.getSession().getAttribute($SessionID);
         
         // 单点登陆：请求各个单点是否有过登录动作，并通过jsonp跨域回调给最终用户当前访问的单点。
         String v_SSOCallBack = i_Request.getParameter("SSOCallBack");
@@ -54,7 +54,7 @@ public class XSSOServlet extends HttpServlet
             if ( null != v_SessionData )
             {
                 v_SessionUSID = v_SessionData.getDataXID();
-                v_SessionData = (CommunicationRequest)XJava.getObject(v_SessionUSID);
+                v_SessionData = (Communication)XJava.getObject(v_SessionUSID);
                 if ( v_SessionData != null )
                 {
                     i_Response.getWriter().println(v_SSOCallBack + "('" + v_SessionUSID + "');");
@@ -68,6 +68,10 @@ public class XSSOServlet extends HttpServlet
                     Log.log(":USID 票据已失效，全局会话将销毁。" ,v_SessionUSID);
                 }
             }
+            else
+            {
+                Log.log("无全局会话，请登陆。" ,"");
+            }
             
             return;
         }
@@ -77,7 +81,7 @@ public class XSSOServlet extends HttpServlet
         {
             if ( Help.isNull(v_USID) )
             {
-                // Nothing.
+                Log.log("无票据无全局会话。" ,"");
             }
             else if ( this.createSessionByUSID(i_Request ,v_USID) )
             {
@@ -91,7 +95,7 @@ public class XSSOServlet extends HttpServlet
         else
         {
             v_SessionUSID = v_SessionData.getDataXID();
-            v_SessionData = (CommunicationRequest)XJava.getObject(v_SessionUSID);
+            v_SessionData = (Communication)XJava.getObject(v_SessionUSID);
             
             if ( v_SessionData == null )
             {
@@ -111,8 +115,8 @@ public class XSSOServlet extends HttpServlet
             else
             {
                 // 保持集群会话活力及有效性
-                AppCluster.aliveCluster(v_SessionUSID ,v_SessionData ,AppCluster.getSSOSessionTimeOut());
                 Log.log(":USID A保持集群会话活力。" ,v_SessionUSID);
+                AppCluster.aliveCluster(v_SessionUSID ,v_SessionData ,AppCluster.getSSOSessionTimeOut());
             }
         }
     }
@@ -133,7 +137,7 @@ public class XSSOServlet extends HttpServlet
      */
     private boolean createSessionByUSID(HttpServletRequest i_Request ,String i_USID)
     {
-        CommunicationRequest v_SessionData = (CommunicationRequest)XJava.getObject(i_USID);
+        Communication v_SessionData = (Communication)XJava.getObject(i_USID);
         
         if ( v_SessionData == null )
         {

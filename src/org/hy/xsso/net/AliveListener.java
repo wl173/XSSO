@@ -63,8 +63,8 @@ public class AliveListener implements CommunicationListener
         Log.log(":USID L保持集群会话活力。" ,i_RequestData.getDataXID());
         
         v_ResponseData.setDataXID(i_RequestData.getDataXID());
-        XJava.putObject(i_RequestData.getDataXID() ,i_RequestData);
-        AppCluster.aliveCluster(i_RequestData.getDataXID() ,i_RequestData ,i_RequestData.getDataExpireTimeLen());
+        XJava.putObject(        i_RequestData.getDataXID() ,i_RequestData.getData() ,i_RequestData.getDataExpireTimeLen());
+        AppCluster.aliveCluster(i_RequestData.getDataXID() ,i_RequestData.getData() ,i_RequestData.getDataExpireTimeLen());
         
         return v_ResponseData;
     }
