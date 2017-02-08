@@ -50,6 +50,8 @@ public final class InitConfig extends AppInitConfig
         {
             $Init = true;
             
+            init_TPool();
+            
             try
             {
                 this.initW("sys.Config.xml" ,this.xmlRoot);
@@ -64,8 +66,6 @@ public final class InitConfig extends AppInitConfig
                 exce.printStackTrace();
             }
             
-            
-            init_TPool();
             
             SSOCluster.syncSSOSessions();
         }
