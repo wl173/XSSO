@@ -1,5 +1,7 @@
 package org.hy.xsso.net;
 
+import org.hy.common.Date;
+import org.hy.common.ExpireMap;
 import org.hy.common.Help;
 import org.hy.common.net.CommunicationListener;
 import org.hy.common.net.data.CommunicationRequest;
@@ -21,6 +23,20 @@ import org.hy.xsso.common.Log;
  */
 public class AliveListener implements CommunicationListener
 {
+    
+    private static ExpireMap<String ,Date> $CacheTimes;
+    
+    
+    
+    public AliveListener()
+    {
+        if ( $CacheTimes == null )
+        {
+            $CacheTimes = new ExpireMap<String ,Date>();
+        }
+    }
+    
+    
     
     /**
      *  数据通讯的事件类型。即通知哪一个事件监听者来处理数据通讯（对应 ServerSocket.listeners 的分区标识）
@@ -60,12 +76,25 @@ public class AliveListener implements CommunicationListener
             return v_ResponseData;
         }
         
-        Log.log(":USID L保持集群会话活力。" ,i_RequestData.getDataXID());
+        XJava.putObject(i_RequestData.getDataXID() ,i_RequestData.getData() ,i_RequestData.getDataExpireTimeLen());
+        
+        int     v_Interval = Integer.parseInt(XJava.getParam("AliveIntervalTime").getValue());
+        Date    v_Time     = $CacheTimes.get(i_RequestData.getDataXID());
+        boolean v_IsPush   = (v_Time == null);
+        
+        if ( v_IsPush )
+        {
+            Log.log(":USID L保持集群会话活力。" ,i_RequestData.getDataXID());
+            
+            if ( v_Interval > 0 )
+            {
+                $CacheTimes.put(i_RequestData.getDataXID() ,new Date() ,v_Interval);
+            }
+            
+            AppCluster.aliveCluster(i_RequestData.getDataXID() ,i_RequestData.getData() ,i_RequestData.getDataExpireTimeLen());
+        }
         
         v_ResponseData.setDataXID(i_RequestData.getDataXID());
-        XJava.putObject(        i_RequestData.getDataXID() ,i_RequestData.getData() ,i_RequestData.getDataExpireTimeLen());
-        AppCluster.aliveCluster(i_RequestData.getDataXID() ,i_RequestData.getData() ,i_RequestData.getDataExpireTimeLen());
-        
         return v_ResponseData;
     }
     
