@@ -89,8 +89,8 @@ public class SSOCluster extends Cluster
      */
     public static List<ClientSocket> getSSOServersNoMy()
     {
-        String             v_My             = Help.NVL(Help.NVL(XJava.getParam("WhoAmI") ,new Param()).getValue());
-        String []          v_ClusterServers = Help.NVL(Help.NVL(XJava.getParam("AppServers") ,new Param()).getValue()).split(",");
+        String             v_My             = Help.NVL(Help.NVL(XJava.getParam("WhoAmI")         ,new Param()).getValue());
+        String []          v_ClusterServers = Help.NVL(Help.NVL(XJava.getParam("ClusterServers") ,new Param()).getValue()).split(",");
         List<ClientSocket> v_Clusters       = new ArrayList<ClientSocket>();
         
         if ( !Help.isNull(v_ClusterServers) )
