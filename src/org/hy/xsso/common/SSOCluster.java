@@ -3,6 +3,7 @@ package org.hy.xsso.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hy.common.ExpireMap;
 import org.hy.common.Help;
 import org.hy.common.StringHelp;
 import org.hy.common.app.Param;
@@ -41,19 +42,19 @@ public class SSOCluster extends Cluster
     @SuppressWarnings("unchecked")
     public static void syncSSOSessions()
     {
-        List<ClientSocket>          v_Servers      = getSSOServersNoMy();
-        CommunicationResponse       v_ResponseData = null;
-        List<CommunicationResponse> v_Datas        = null;
+        List<ClientSocket>        v_Servers      = getSSOServersNoMy();
+        CommunicationResponse     v_ResponseData = null;
+        ExpireMap<String ,Object> v_Datas        = null;
         
         System.out.println("-- 同步集群单点登陆服务的会话数据... ...");
         
         for (ClientSocket v_Server : v_Servers)
         {
-            v_ResponseData = v_Server.getObjects("");
+            v_ResponseData = v_Server.getSessionMap();
             
             if ( v_ResponseData != null && v_ResponseData.getResult() == 0 )
             {
-                v_Datas = (List<CommunicationResponse>)v_ResponseData.getData();
+                v_Datas = (ExpireMap<String ,Object>)v_ResponseData.getData();
                 
                 if ( !Help.isNull(v_Datas) ) {break;}
             }
@@ -63,14 +64,8 @@ public class SSOCluster extends Cluster
         
         if ( !Help.isNull(v_Datas) )
         {
-            for (CommunicationResponse v_Data : v_Datas)
-            {
-                if ( v_Data.getDataExpireTimeLen() > 0 )
-                {
-                    XJava.putObject(v_Data.getDataXID() ,v_Data.getData() ,v_Data.getDataExpireTimeLen());
-                    v_Count++;
-                }
-            }
+            v_Count = v_Datas.size();
+            XJava.getSessionMap().putAll(v_Datas);
         }
         
         System.out.println("-- 同步集群单点登陆服务的会话数据... ...完成. 共同步 " + v_Count + " 份。");
