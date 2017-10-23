@@ -42,6 +42,9 @@ public class XSSOServlet extends HttpServlet
     
     public void doGet(HttpServletRequest i_Request, HttpServletResponse i_Response) throws ServletException, IOException 
     {
+        i_Response.setCharacterEncoding("UTF-8");
+        i_Response.setContentType("text/javascript");
+        
         Communication v_SessionData = (Communication)i_Request.getSession().getAttribute($SessionID);
         
         // 单点登陆：请求各个单点是否有过登录动作，并通过jsonp跨域回调给最终用户当前访问的单点。
@@ -59,6 +62,7 @@ public class XSSOServlet extends HttpServlet
                 {
                     i_Response.getWriter().println(v_SSOCallBack + "('" + v_SessionUSID + "');");
                     Log.log(":USID 全局会话有效，返回票据。" ,v_SessionUSID);
+                    return;
                 }
                 else
                 {
@@ -73,6 +77,7 @@ public class XSSOServlet extends HttpServlet
                 Log.log("无全局会话，请登陆。" ,"");
             }
             
+            i_Response.getWriter().println("");
             return;
         }
         
@@ -119,6 +124,8 @@ public class XSSOServlet extends HttpServlet
                 AppCluster.aliveCluster(v_SessionUSID ,v_SessionData ,AppCluster.getSSOSessionTimeOut());
             }
         }
+        
+        i_Response.getWriter().println("");
     }
     
     
