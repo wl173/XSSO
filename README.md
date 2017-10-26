@@ -1,6 +1,7 @@
-XSSO
+# XSSO
 
 统一单点登陆验证服务
+------
 
 
 
@@ -42,6 +43,13 @@ XSSO
 
 ➢ 查看配置参数页面 http://127.0.0.1:8080/XSSO/analyses/analyseObject?xid=SYSParam
 
+
+
+
+实战案例：吴忠仪表有限责任公司
+------
+XSSO单点服务器内外网络环境
+![image](images/eg_WZYB.png)
 
 
 ---
