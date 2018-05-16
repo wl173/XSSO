@@ -28,7 +28,7 @@ public class LoginAction
     /**
      * 检查session是否失效
      * 
-     * @param i_USID
+     * @param i_USID  票据
      * @return
      */
     public User loadSession(String i_USID)
