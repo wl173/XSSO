@@ -4,8 +4,8 @@ import org.hy.common.Date;
 import org.hy.common.Help;
 import org.hy.common.net.data.Communication;
 
-import xx.xx.xx.User;
-import xx.xx.xx.SSODAO;
+import xxx.xxx.User;
+import xxx.xxx.ISSODAO;
 
 
 
