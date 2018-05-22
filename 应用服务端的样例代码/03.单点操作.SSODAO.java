@@ -1,9 +1,7 @@
-package xx.xx.xx;
+package xxx.xxx.dao.impl;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hy.common.Help;
 import org.hy.common.StringHelp;
@@ -14,6 +12,9 @@ import org.hy.common.net.data.CommunicationRequest;
 import org.hy.common.net.data.CommunicationResponse;
 import org.hy.common.xml.XJava;
 import org.hy.common.xml.annotation.Xjava;
+
+import xxx.xxx.ISSODAO;
+import xxx.xxx.User;
 
 
 
@@ -27,12 +28,8 @@ import org.hy.common.xml.annotation.Xjava;
  * @version     v1.0
  */
 @Xjava
-public class SSODAO
+public class SSODAO implements ISSODAO
 {
-    
-    public final  static String $USID = "USID";
-    
-    
     
     /**
      * 用户首次登陆时，集群同步单点登陆信息
@@ -42,12 +39,13 @@ public class SSODAO
      * @version     v1.0
      *
      * @param i_SessionID  会话ID
-     * @param i_User       登陆的用户信息(需实现 java.io.Serializable 接口)
+     * @param i_User       登陆的用户信息
      */
-    public void loginClusterUser(String i_SessionID ,Object i_User)
+    public void loginClusterUser(String i_SessionID ,User i_User)
     {
         List<ClientSocket> v_Servers     = this.getSSOServers();
-        Return<Object>     v_RequestData = new Return<Object>();
+        Communication      v_SessionData = new Communication();
+        User               v_Clone       = i_User;
         String             v_USID        = "";
         
         if ( i_SessionID.startsWith($USID) )
@@ -69,9 +67,9 @@ public class SSODAO
         {
             ClientSocketCluster.sendObjects(v_Servers 
                                            ,this.getClusterTimeout() 
-                                           ,v_USID
-                                           ,v_RequestData
-                                           ,this.getSSOSessionTimeOut()
+                                           ,v_SessionData.getDataXID()
+                                           ,v_SessionData
+                                           ,v_SessionData.getDataExpireTimeLen()
                                            ,false);
         }
     }
@@ -122,12 +120,13 @@ public class SSODAO
      * @version     v1.0
      *
      * @param i_SessionID  会话ID
-     * @param i_User       登陆的用户信息(需实现 java.io.Serializable 接口)
+     * @param i_User       登陆的用户信息
      */
     public void aliveClusterUser(String i_SessionID ,Object i_User)
     {
         List<ClientSocket>   v_Servers     = this.getSSOServers();
         CommunicationRequest v_RequestData = new CommunicationRequest();
+        Communication        v_SessionData = new Communication();
         String               v_USID        = "";
         
         if ( i_SessionID.startsWith($USID) )

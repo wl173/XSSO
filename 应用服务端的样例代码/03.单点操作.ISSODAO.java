@@ -1,6 +1,6 @@
-package com.fms.xx.dao;
+package xxx.xxx.dao;
 
-import com.fms.xx.sys.model.User;
+import xxx.xxx.User;
 
 
 
