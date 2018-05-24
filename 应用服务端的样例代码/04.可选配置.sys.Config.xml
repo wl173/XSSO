@@ -13,6 +13,12 @@
 		
 	    <xparam id="SYSParam" key="name">
 	    
+	    	<item id="RootPackageName">
+	            <name>RootPackageName</name>
+				<value>xxx.xxx.xxx</value>
+				<comment>顶级包的路径。用于初始化。一般不修改</comment>
+	        </item>
+	    
 	        <item id="SSOServers">
 	            <name>SSOServers</name>
 				<value>
