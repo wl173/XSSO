@@ -11,6 +11,12 @@
 	<xconfig>
 		
 		<server id="Server">
+<!--        
+			<port>1721</port>
+			<minPort>17000</minPort>
+			<maxPort>17999</maxPort>
+ -->
+		
 			<call name="open" />
 		</server>
 		
