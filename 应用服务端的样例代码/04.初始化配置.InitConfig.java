@@ -57,11 +57,6 @@ public final class InitConfig extends AppInitConfig
                 this.init((List<Param>)XJava.getObject("StartupConfig") ,Help.getClassPath(this));
                 this.init(((Param)XJava.getObject("RootPackageName")).getValue());
                 init_TPool();
-                
-                if ( i_IsStartJobs )
-                {
-                    this.init("job.Config.xml");
-                }
             }
             catch (Exception exce)
             {
