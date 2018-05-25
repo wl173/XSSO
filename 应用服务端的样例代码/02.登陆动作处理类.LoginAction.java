@@ -2,7 +2,12 @@ package xx.xx.xx;
 
 import org.hy.common.Date;
 import org.hy.common.Help;
+import org.hy.common.StringHelp;
 import org.hy.common.net.data.Communication;
+import org.hy.common.xml.XJava;
+
+import com.fms.xx.common.AMFContext;
+import com.fms.xx.service.IUserService;
 
 import xxx.xxx.User;
 import xxx.xxx.ISSODAO;
@@ -75,7 +80,37 @@ public class LoginAction
                         
                 if ( v_LoginUser != null )
                 {
-                    System.out.println(Date.getNowTime().getFullMilli() + "  跨域单点登陆：" + v_LoginUser.getUserName());
+                    xxx.xxx v_LocalUser = null;   // 本系统的用户（结构可能与其它系统的不一样）
+                    
+                    // 判定不是本系统的用户时，将初始化本系统的用户信息
+                    // 当多个系统的用户结构不一样时，才需要下面的代码
+                    // 当所有系统的用户结构是一样时，只须：getSession().setSessionAttribute("本系统的会话ID" ,v_LoginUser); 即可。
+                    if ( !StringHelp.isContains(v_LoginUser.getUserType() ,"UserType01" ,"UserType02") )
+                    {
+                        v_LocalUser = 初始用户信息; // v_UserService.queryByLoginAccount(v_LoginUser.getLoginAccount());
+                        
+                        if ( v_LocalUser == null )
+                        {
+                            return null;
+                        }
+                        
+                        getSession().setSessionAttribute("本系统的会话ID" ,v_LocalUser);
+                    }
+                    // 当多个系统的用户结构不一样时，才需要下面的代码
+                    // 当所有系统的用户结构是一样时，只须：getSession().setSessionAttribute("本系统的会话ID" ,v_LoginUser); 即可。
+                    else
+                    {
+                        v_LocalUser = 初始用户信息; // v_UserService.queryByID(v_LoginUser.getUserID());
+                        
+                        if ( v_LocalUser == null )
+                        {
+                            return null;
+                        }
+                        
+                        getSession().setSessionAttribute("本系统的会话ID" ,v_LocalUser);
+                    }
+                    
+                    System.out.println(Date.getNowTime().getFullMilli() + "  跨域单点登陆：" + v_LoginUser.getLoginAccount() + v_LoginUser.getUserName());
                     getSession().setSessionAttribute($SessionID ,v_LoginUser);
                     
                     // 保持集群会话活力及有效性
