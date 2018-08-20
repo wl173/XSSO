@@ -56,7 +56,7 @@
         if ( Help.isPortOpen(v_HostPort[0] ,v_Port) )
         {
     %>
-    		<script type="text/javascript" src="http://<%=v_Server%>/XSSO/sso?SSOCallBack=getUSID"></script>
+    		<script type="text/javascript" src="http://<%=v_Server%>/XSSO/sso?SSOCallBack=getUSID&r=<%= new Date().getTime() %>"></script>
     <%
         }
     }

@@ -70,7 +70,7 @@ public class SSODAO implements ISSODAO
                                            ,v_SessionData.getDataXID()
                                            ,v_SessionData
                                            ,v_SessionData.getDataExpireTimeLen()
-                                           ,false);
+                                           ,true);
         }
     }
     
