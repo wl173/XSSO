@@ -38,9 +38,9 @@
 	        <item id="AppServers">
 	            <name>AppServers</name>
 				<value>
-				    127.0.0.1
+				    127.0.0.1:1721
 				</value>
-				<comment>全部应用服务器列表(用逗号分隔)</comment>
+				<comment>全部应用服务器列表(用逗号分隔)，内部通讯地址及端口</comment>
 	        </item>
 	        
 	        <item id="ClusterTimeout">
