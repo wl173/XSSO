@@ -70,4 +70,17 @@ public interface ISSODAO
      */
     public void syncSSOSessions();
     
+    
+    
+    /**
+     * 单点登陆的会话超时时长(单位：秒)
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2017-01-23
+     * @version     v1.0
+     *
+     * @return
+     */
+    public long getSSOSessionTimeOut();
+    
 }

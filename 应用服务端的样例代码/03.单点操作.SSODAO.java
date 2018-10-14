@@ -230,7 +230,7 @@ public class SSODAO implements ISSODAO
      *
      * @return
      */
-    private long getSSOSessionTimeOut()
+    public long getSSOSessionTimeOut()
     {
         return Long.parseLong(XJava.getParam("SSOSessionTimeOut").getValue());
     }
