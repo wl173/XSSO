@@ -88,34 +88,26 @@ public class LoginAction
                     if ( !StringHelp.isContains(v_LoginUser.getUserType() ,"UserType01" ,"UserType02") )
                     {
                         v_LocalUser = 初始用户信息; // v_UserService.queryByLoginAccount(v_LoginUser.getLoginAccount());
-                        
-                        if ( v_LocalUser == null )
-                        {
-                            return null;
-                        }
-                        
-                        getSession().setSessionAttribute("本系统的会话ID" ,v_LocalUser);
                     }
                     // 当多个系统的用户结构不一样时，才需要下面的代码
                     // 当所有系统的用户结构是一样时，只须：getSession().setSessionAttribute("本系统的会话ID" ,v_LoginUser); 即可。
                     else
                     {
                         v_LocalUser = 初始用户信息; // v_UserService.queryByID(v_LoginUser.getUserID());
-                        
-                        if ( v_LocalUser == null )
-                        {
-                            return null;
-                        }
-                        
-                        getSession().setSessionAttribute("本系统的会话ID" ,v_LocalUser);
                     }
                     
-                    System.out.println(Date.getNowTime().getFullMilli() + "  跨域单点登陆：" + v_LoginUser.getLoginAccount() + v_LoginUser.getUserName());
-                    getSession().setSessionAttribute($SessionID ,v_LoginUser);
+                    if ( v_LocalUser != null )
+                    {
+                        System.out.println(Date.getNowTime().getFullMilli() + "  跨域单点登陆：" + v_LocalUser.getLoginAccount() + v_LocalUser.getUserName());
+                        
+                        v_LocalUser.setSessionID(v_LoginUser.getSessionID());  // 单点退出时用的票据
+                        getSession().setSessionAttribute($SessionID ,v_LocalUser);
+                        
+                        // 保持集群会话活力及有效性
+                        v_SSODAO.aliveClusterUser(v_SessionData.getDataXID() ,v_SessionData.getData());
+                    }
                     
-                    // 保持集群会话活力及有效性
-                    v_SSODAO.aliveClusterUser(v_SessionData.getDataXID() ,v_SessionData.getData());
-                    return v_LoginUser;
+                    return v_LocalUser;
                 }
             }
         }
