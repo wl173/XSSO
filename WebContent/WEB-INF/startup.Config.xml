@@ -18,6 +18,10 @@
 	    	</item>
 	    	
 	    	<item>
+	    		<value>cloud.Config.xml</value>
+	    	</item>
+	    	
+	    	<item>
 	    		<value>sys.AnalysesCatalogue.xml</value>
 	    	</item>
 	    	
