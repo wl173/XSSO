@@ -1,5 +1,9 @@
 package xxx.xxx.dao;
 
+import java.util.List;
+
+import org.hy.common.net.ClientSocket;
+
 import xxx.xxx.User;
 
 
@@ -96,5 +100,18 @@ public interface ISSODAO
      * @return
      */
     public long getSSOSessionTimeOut();
+    
+    
+    
+    /**
+     * 获取集群配置信息
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2017-01-17
+     * @version     v1.0
+     *
+     * @return
+     */
+    public List<ClientSocket> getSSOServers();
     
 }

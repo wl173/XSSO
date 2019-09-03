@@ -291,7 +291,7 @@ public class SSODAO implements ISSODAO
      *
      * @return
      */
-    private List<ClientSocket> getSSOServers()
+    public List<ClientSocket> getSSOServers()
     {
         String []          v_ClusterServers = StringHelp.replaceAll(XJava.getParam("SSOServers").getValue() ,new String[]{" " ,"\t" ,"\r" ,"\n"} ,new String[]{""}).split(",");
         List<ClientSocket> v_Clusters       = new ArrayList<ClientSocket>();
