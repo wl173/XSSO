@@ -73,6 +73,20 @@ public interface ISSODAO
     
     
     /**
+     * 同步某一个具体的USID的单点登陆服务器的会话数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2019-09-03
+     * @version     v1.0
+     *
+     * @param i_USID   会话ID
+     * @return
+     */
+    public Object syncSSOSession(String i_USID);
+    
+    
+    
+    /**
      * 单点登陆的会话超时时长(单位：秒)
      * 
      * @author      ZhengWei(HY)

@@ -206,6 +206,51 @@ public class SSODAO implements ISSODAO
     
     
     /**
+     * 同步某一个具体的USID的单点登陆服务器的会话数据
+     * 
+     * @author      ZhengWei(HY)
+     * @createDate  2019-09-03
+     * @version     v1.0
+     *
+     * @param i_USID   会话ID
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Object syncSSOSession(String i_USID)
+    {
+        List<ClientSocket>          v_Servers      = this.getSSOServers();
+        CommunicationResponse       v_ResponseData = null;
+        List<CommunicationResponse> v_Datas        = null;
+        
+        for (ClientSocket v_Server : v_Servers)
+        {
+            v_ResponseData = v_Server.getObjects(i_USID);
+            
+            if ( v_ResponseData != null && v_ResponseData.getResult() == 0 )
+            {
+                v_Datas = (List<CommunicationResponse>)v_ResponseData.getData();
+                
+                if ( !Help.isNull(v_Datas) ) {break;}
+            }
+        }
+        
+        if ( !Help.isNull(v_Datas) )
+        {
+            for (CommunicationResponse v_Data : v_Datas)
+            {
+                if ( v_Data.getDataExpireTimeLen() > 0 )
+                {
+                    XJava.putObject(v_Data.getDataXID() ,v_Data.getData() ,v_Data.getDataExpireTimeLen());
+                }
+            }
+        }
+        
+        return XJava.getObject(i_USID);
+    }
+    
+    
+    
+    /**
      * 集群并发通讯的超时时长(单位：毫秒)
      * 
      * @author      ZhengWei(HY)

@@ -74,6 +74,12 @@ public class LoginAction
         {
             v_SessionData = (Communication)XJava.getObject(i_USID);
             
+            // 尝试从单点服务上获取会话信息
+            if ( v_SessionData == null )
+            {
+                v_SessionData = (Communication)this.ssoDAO.syncSSOSession(i_USID);
+            }
+            
             if ( v_SessionData != null )
             {
                 v_LoginUser = (User)v_SessionData.getData();
@@ -132,6 +138,10 @@ public class LoginAction
         // ...
         // 验证成功后，执行下面的代码
         
+        
+        
+        // i_User 是与单点登录服务相互通讯的数据结构。
+        //        如果与本服务的User对象结构不一样，可以转换后使用。
         
         
         // 生成票据
