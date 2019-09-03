@@ -6,6 +6,8 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.hy.common.net.data.Communication;
 import org.hy.common.xml.XJava;
 
+import com.fms.calc.common.BaseController;
+
 import xxx.xxx.LoginAction;
 import xxx.xxx.ISSODAO;
 import xxx.xxx.User;
@@ -26,8 +28,7 @@ public class SessionInterceptor implements MethodInterceptor
     
 	public Object invoke(MethodInvocation invocation) throws Throwable 
 	{
-		User          v_LoginUser   = (User)getSession().getAttribute(LoginAction.$SessionID);
-		Communication v_SessionData = null;
+		User v_LoginUser = (User)getSession().getAttribute(LoginAction.$SessionID);
 		
 		if ( v_LoginUser == null ) 
 		{
@@ -35,13 +36,21 @@ public class SessionInterceptor implements MethodInterceptor
 		}
 		else
 		{
-		    v_SessionData = (Communication)XJava.getObject(v_LoginUser.getSessionID());
-		    if ( v_SessionData == null )
-		    {
-		        getSession().removeAttribute(LoginAction.$SessionID);
-                getSession().invalidate();
+		    ISSODAO       v_SSODAO      = (ISSODAO) XJava.getObject("SSODAO");
+            Communication v_SessionData = (Communication)XJava.getObject(v_User.getSessionID());
+            
+            // 尝试从单点服务上获取会话信息
+            if ( v_SessionData == null )
+            {
+                v_SessionData = (Communication)v_SSODAO.syncSSOSession(v_User.getSessionID());
+            }
+            
+            if ( v_SessionData == null )
+            {
+                v_Session.removeAttribute(BaseController.$SessionUser);
+                v_Session.invalidate();
                 throw new RuntimeException("会话超时或用户已单点退出！");
-		    }
+            }
 		    else
 		    {
 		        getSession().setAttribute(LoginAction.$SessionID ,v_LoginUser);

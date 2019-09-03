@@ -41,7 +41,15 @@ public class SessionInterceptor implements HandlerInterceptor
         }
         else
         {
+            ISSODAO       v_SSODAO      = (ISSODAO) XJava.getObject("SSODAO");
             Communication v_SessionData = (Communication)XJava.getObject(v_User.getSessionID());
+            
+            // 尝试从单点服务上获取会话信息
+            if ( v_SessionData == null )
+            {
+                v_SessionData = (Communication)v_SSODAO.syncSSOSession(v_User.getSessionID());
+            }
+            
             if ( v_SessionData == null )
             {
                 v_Session.removeAttribute(BaseController.$SessionUser);
